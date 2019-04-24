@@ -57,6 +57,19 @@ async function generateComponentTypesFile(config: d.Config, compilerCtx: d.Compi
     return createTypesAsString(cmpMeta, importPath);
   });
 
+  const elementsFileString = `
+export namespace Elements {
+${modules.map(m => m.global).join('\n')}
+
+interface HTMLElementTagNameMap {
+${modules.map(m => m.HTMLElementTagNameMap).join('\n')}
+}
+
+interface ElementTagNameMap {
+${modules.map(m => m.ElementTagNameMap).join('\n')}
+}
+}
+`;
   const componentsFileString = `
 export namespace Components {
 ${modules.map(m => {
@@ -123,6 +136,8 @@ ${typeImportString}
 ${componentsFileString}
 ${defineGlobalIntrinsicElements ? generateLocalTypesFile() : ''}
 }
+
+${elementsFileString}
 `;
   return `${header}
 
